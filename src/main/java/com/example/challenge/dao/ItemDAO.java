@@ -4,13 +4,11 @@ import com.example.challenge.model.Item;
 import com.example.challenge.model.Items;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class ItemDAO {
-    private static Items list = new Items();
+    private static final Items list = new Items();
 
     static {
         list.getItemList().add(new Item(1L, "item 1", "this is item 1", 12.0));
@@ -46,7 +44,7 @@ public class ItemDAO {
                     list.getItemList().get(list.getItemList().size() - 1).getId() + 1;
             item =
                     new Item(id, name, desc, price);
-            list.getItemList().add(item);
+            addItem(item);
         }
         return item;
     }
