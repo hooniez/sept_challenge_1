@@ -4,6 +4,10 @@ import com.example.challenge.model.Item;
 import com.example.challenge.model.Items;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Repository
 public class ItemDAO {
     private static Items list = new Items();
@@ -18,7 +22,32 @@ public class ItemDAO {
         return list;
     }
 
+    public Optional<Item> getItemById(Long id) {
+        return list.getItemList().stream().filter(item -> item.getId().equals(id)).findFirst();
+    }
+
+    public boolean deleteItemById(Long id) {
+        return list.getItemList().removeIf(item -> item.getId().equals(id));
+    }
+
     public void addItem(Item item) {
         list.getItemList().add(item);
+    }
+
+    public Item update(Long id, String name, String desc, double price) {
+        Item item;
+        if (getItemById(id).isPresent()) {
+            item = getItemById(id).get();
+            item.setName(name);
+            item.setDesc(desc);
+            item.setPrice(price);
+        } else {
+            id =
+                    list.getItemList().get(list.getItemList().size() - 1).getId() + 1;
+            item =
+                    new Item(id, name, desc, price);
+            list.getItemList().add(item);
+        }
+        return item;
     }
 }
